@@ -356,11 +356,18 @@ public class BoardPanel extends JPanel
             return;
         }
 
+        // Do not highlight squares that were already fired upon
+        if(shotCells[previewRow][previewCol] != CellState.EMPTY)
+        {
+            return;
+        }
+
         int x = startX + previewCol * cellSize;
         int y = startY + previewRow * cellSize;
 
         g.setColor(new Color(255, 220, 90));
         g.fillRect(x + 2, y + 2, cellSize - 3, cellSize - 3);
+
         g.setColor(new Color(25, 70, 105));
         g.drawRect(x, y, cellSize, cellSize);
     }
@@ -456,5 +463,51 @@ public class BoardPanel extends JPanel
         {
             shipPlacementListener.shipPlaced(placedShip);
         }
+    }
+    public CellState fireAt(int row, int col)
+    {
+        // Reject invalid coordinates
+        if(row < 0 || row >= BOARD_SIZE ||
+        col < 0 || col >= BOARD_SIZE)
+        {
+            return null;
+        }
+
+        // Reject a square that was already selected
+        if(shotCells[row][col] != CellState.EMPTY)
+        {
+            return null;
+        }
+
+        // Compare the shot against the parallel ship array
+        if(shipCells[row][col] == CellState.SHIP)
+        {
+            shotCells[row][col] = CellState.HIT;
+        }
+        else
+        {
+            shotCells[row][col] = CellState.MISS;
+        }
+
+        repaint();
+
+        return shotCells[row][col];
+    }
+    public boolean areAllShipsSunk()
+    {
+        for(int row = 0; row < BOARD_SIZE; row++)
+        {
+            for(int col = 0; col < BOARD_SIZE; col++)
+            {
+                // A ship location exists that has not been hit
+                if(shipCells[row][col] == CellState.SHIP &&
+                shotCells[row][col] != CellState.HIT)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
