@@ -389,6 +389,12 @@ public class BattleshipFrame extends JFrame
             );
 
             playSound("missileHit.wav");
+
+            ShipType sunkShip = targetBoard.getLastSunkShip();
+            if(sunkShip != null)
+            {
+                addGameMessage("Player " + currentPlayer + " destroyed Player " + targetPlayer + "'s " + sunkShip.getName() + "!");
+            }
         }
         else
         {
