@@ -305,18 +305,64 @@ public class BattleshipFrame extends JFrame
             return;
         }
 
+        // Player 1 must fire at Player 2's board
         if(currentPlayer == 1 && targetPlayer != 2)
         {
             return;
         }
 
+        // Player 2 must fire at Player 1's board
         if(currentPlayer == 2 && targetPlayer != 1)
         {
             return;
         }
 
+        BoardPanel targetBoard;
+
+        if(targetPlayer == 1)
+        {
+            targetBoard = player1Board;
+        }
+        else
+        {
+            targetBoard = player2Board;
+        }
+
+        CellState result = targetBoard.fireAt(row, col);
+
+        if(result == null)
+        {
+            JOptionPane.showMessageDialog(
+                this,
+                "That square has already been selected.\nChoose another square.",
+                "Invalid Shot",
+                JOptionPane.WARNING_MESSAGE
+            );
+
+            return;
+        }
+
         char columnLetter = (char)('A' + col);
-        addGameMessage("Player " + currentPlayer + " selected " + columnLetter + (row + 1) + ".");
+        String coordinate = "" + columnLetter + (row + 1);
+
+        if(result == CellState.HIT)
+        {
+            addGameMessage(
+                "Player " + currentPlayer +
+                " fired at " + coordinate + ": HIT!"
+            );
+
+            playSound("missileHit.wav");
+        }
+        else
+        {
+            addGameMessage(
+                "Player " + currentPlayer +
+                " fired at " + coordinate + ": MISS."
+            );
+
+            playSound("WaterSplash.wav");
+        }
 
         // Switch to the other player
         if(currentPlayer == 1)
@@ -325,23 +371,27 @@ public class BattleshipFrame extends JFrame
 
             player2Board.setFiringMode(false);
             player1Board.setFiringMode(true);
-    
+
             player1Title.setText("PLAYER 1 TARGET GRID");
             player2Title.setText("PLAYER 2 BOARD");
 
-            statusLabel.setText("Player 2: Select a square on Player 1's board");
+            statusLabel.setText(
+                "Player 2: Select a square on Player 1's board"
+            );
         }
         else
         {
             currentPlayer = 1;
-            
+
             player1Board.setFiringMode(false);
             player2Board.setFiringMode(true);
 
             player1Title.setText("PLAYER 1 BOARD");
             player2Title.setText("PLAYER 2 TARGET GRID");
 
-            statusLabel.setText("Player 1: Select a square on Player 2's board");
+            statusLabel.setText(
+                "Player 1: Select a square on Player 2's board"
+            );
         }
     }
 
