@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JPanel;
+import java.util.Random;
 
 public class BoardPanel extends JPanel
 {
@@ -464,6 +465,69 @@ public class BoardPanel extends JPanel
             shipPlacementListener.shipPlaced(placedShip);
         }
     }
+
+    // Clear all current ships and randomly place entire fleet
+    public void placeFleetRandomly()
+    {
+        Random random = new Random();
+
+        // Remove ships that were already placed
+        for(int row = 0; row < BOARD_SIZE; row++)
+        {
+            for(int col = 0; col < BOARD_SIZE; col++)
+            {
+                shipCells[row][col] = CellState.EMPTY;
+            }
+        }
+
+        // Randomly place each ship
+        for(ShipType ship : ShipType.values())
+        {
+            currentShip = ship;
+            boolean placed = false;
+
+            // Randomly placed with random orientation
+            while(!placed)
+            {
+                horizontal = random.nextBoolean();
+                int row = random.nextInt(BOARD_SIZE);
+                int col = random.nextInt(BOARD_SIZE);
+                if(canPlaceShip(row, col))
+                {
+                    for(int i = 0; i < currentShip.getLength(); i++)
+                    {
+                        int shipRow = row;
+                        int shipCol = col;
+                        if(horizontal)
+                        {
+                            shipCol += i;
+                        }
+                        else
+                        {
+                            shipRow += i;
+                        }
+                        shipCells[shipRow][shipCol] = CellState.SHIP;
+                    }
+                    placed = true;
+                }
+            }
+        }
+
+        // Stopping player placement since random placed all 5
+        placementMode = false;
+        firingMode = false;
+        showShips = true;
+        currentShip = null;
+        previewCol = -1;
+        previewRow = -1;
+
+        repaint();
+    }
+
+
+
+
+
     public CellState fireAt(int row, int col)
     {
         // Reject invalid coordinates

@@ -41,6 +41,7 @@ public class BattleshipFrame extends JFrame
 
     private final JTextArea gameRelay;
     private final JButton rotateShipButton;
+    private final JButton randomFleetButton;
 
     // Contains the 5 ships in placement order
     private final ShipType[] fleet;
@@ -94,6 +95,7 @@ public class BattleshipFrame extends JFrame
         // Buttons
         rotateShipButton = new JButton("Rotate Ship");
         JButton rulesButton = new JButton("Rules");
+        randomFleetButton = new JButton("Random Fleet");
 
         // Events
         rotateShipButton.addActionListener(event -> 
@@ -107,6 +109,38 @@ public class BattleshipFrame extends JFrame
         });
 
         rulesButton.addActionListener(event -> new RulesWindow());
+
+        // Randomly place 5 ships for current player
+        randomFleetButton.addActionListener(event ->
+        {
+            if(placementComplete)
+            {
+                return;
+            }
+
+            // Warning message
+            int choice = JOptionPane.showConfirmDialog
+            (
+                this,
+                "This will remove any ships already placed and randomly place all five ships.\n\nContinue?",
+                "Random Fleet",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+
+            if(choice != JOptionPane.YES_OPTION)
+            {
+                return;
+            }
+
+            BoardPanel board = getPlacementBoard();
+            board.placeFleetRandomly();
+
+            // 5 ships placed
+            currentShipIndex = fleet.length;
+            addGameMessage("Player " + placementPlayer + " randomly placed all five ships.");
+            finishPlayerPlacement();
+        });
 
         // Placing two boards next to each other
         JPanel boardsPanel = new JPanel(new GridLayout(1, 2, 14, 0));
@@ -137,6 +171,7 @@ public class BattleshipFrame extends JFrame
         buttonPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
 
         buttonPanel.add(rotateShipButton);
+        buttonPanel.add(randomFleetButton);
         buttonPanel.add(rulesButton);
 
         // Adding relay and buttons to right side
@@ -282,6 +317,7 @@ public class BattleshipFrame extends JFrame
 
             // Rotation is no longer needed after placement
             rotateShipButton.setEnabled(false);
+            randomFleetButton.setEnabled(false);
 
             statusLabel.setText("Player 1: Select a square on Player 2's board");
             addGameMessage("Both players placed all five ships.");
