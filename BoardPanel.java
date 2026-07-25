@@ -31,7 +31,12 @@ public class BoardPanel extends JPanel
 
     // Storing of firing (HIT or MISS)
     private final CellState[][] shotCells;
-    
+
+    // Storing which ship occupies each square
+    private final ShipType[][] shipTypes;
+    // Which ship is destroyed by most recent shot
+    private ShipType lastSunkShip;
+
     // Drawing information for mouse clicks
     private int startX;
     private int startY;
@@ -71,6 +76,8 @@ public class BoardPanel extends JPanel
     {
         shipCells = new CellState[BOARD_SIZE][BOARD_SIZE];
         shotCells = new CellState[BOARD_SIZE][BOARD_SIZE];
+        shipTypes = new ShipType[BOARD_SIZE][BOARD_SIZE];
+        lastSunkShip = null;
  
         // Start cells as EMPTY
         for(int i = 0; i < BOARD_SIZE; i++)
@@ -250,7 +257,18 @@ public class BoardPanel extends JPanel
 
                 if(shotCells[row][col] == CellState.HIT)
                 {
-                    g.setColor(Color.RED);
+                    // Entire ship destroyed -> GRAY  else hit -> RED
+                    ShipType ship = shipTypes[row][col];
+                    if(ship != null && isShipSunk(ship))
+                    {
+                        // Entire shit destroyed
+                        g.setColor(Color.GRAY);
+                    }
+                    else
+                    {
+                        // Hit but not entire ship
+                        g.setColor(Color.RED);
+                    }
                 }
                 else if(shotCells[row][col] ==CellState.MISS)
                 {
@@ -452,6 +470,7 @@ public class BoardPanel extends JPanel
             }
 
             shipCells[row][col] = CellState.SHIP;
+            shipTypes[row][col] = placedShip;
         }
 
         placementMode = false;
@@ -477,6 +496,7 @@ public class BoardPanel extends JPanel
             for(int col = 0; col < BOARD_SIZE; col++)
             {
                 shipCells[row][col] = CellState.EMPTY;
+                shipTypes[row][col] = null;
             }
         }
 
@@ -507,6 +527,7 @@ public class BoardPanel extends JPanel
                             shipRow += i;
                         }
                         shipCells[shipRow][shipCol] = CellState.SHIP;
+                        shipTypes[shipRow][shipCol] = ship;
                     }
                     placed = true;
                 }
@@ -525,11 +546,30 @@ public class BoardPanel extends JPanel
     }
 
 
+    // Checking square for ship that has been hit
+    private boolean isShipSunk(ShipType ship)
+    {
+        for(int row = 0; row < BOARD_SIZE; row++)
+        {
+            for(int col = 0; col < BOARD_SIZE; col++)
+            {
+                if(shipTypes[row][col] == ship && shotCells[row][col] != CellState.HIT)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 
 
     public CellState fireAt(int row, int col)
     {
+        // Reset destroyed ship from previous shot
+        lastSunkShip = null;
+
         // Reject invalid coordinates
         if(row < 0 || row >= BOARD_SIZE ||
         col < 0 || col >= BOARD_SIZE)
@@ -547,6 +587,13 @@ public class BoardPanel extends JPanel
         if(shipCells[row][col] == CellState.SHIP)
         {
             shotCells[row][col] = CellState.HIT;
+
+            // Checking if entire ship is hit
+            ShipType hitShip = shipTypes[row][col];
+            if(isShipSunk(hitShip))
+            {
+                lastSunkShip = hitShip;
+            }
         }
         else
         {
@@ -573,5 +620,11 @@ public class BoardPanel extends JPanel
         }
 
         return true;
+    }
+
+    // Getter for sunk ship
+    public ShipType getLastSunkShip()
+    {
+        return lastSunkShip;
     }
 }
