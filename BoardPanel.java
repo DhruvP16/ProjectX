@@ -493,4 +493,21 @@ public class BoardPanel extends JPanel
 
         return shotCells[row][col];
     }
+    public boolean areAllShipsSunk()
+    {
+        for(int row = 0; row < BOARD_SIZE; row++)
+        {
+            for(int col = 0; col < BOARD_SIZE; col++)
+            {
+                // A ship location exists that has not been hit
+                if(shipCells[row][col] == CellState.SHIP &&
+                shotCells[row][col] != CellState.HIT)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

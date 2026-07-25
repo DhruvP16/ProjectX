@@ -364,6 +364,12 @@ public class BattleshipFrame extends JFrame
             playSound("WaterSplash.wav");
         }
 
+        if(targetBoard.areAllShipsSunk())
+        {
+            handleGameOver(currentPlayer);
+            return;
+        }
+
         // Switch to the other player
         if(currentPlayer == 1)
         {
@@ -434,5 +440,32 @@ public class BattleshipFrame extends JFrame
     {
         gameRelay.append(message + "\n");
         gameRelay.setCaretPosition(gameRelay.getDocument().getLength());
+    }
+
+    //Game over + new game logic
+    private void handleGameOver(int winningPlayer)
+    {
+        player1Board.setFiringMode(false);
+        player2Board.setFiringMode(false);
+
+        String winMessage =
+            "Player " + winningPlayer + " wins the game!";
+
+        addGameMessage(winMessage);
+        statusLabel.setText(winMessage);
+
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            winMessage + "\n\nWould you like to play again?",
+            "Game Over",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE
+        );
+
+        if(choice == JOptionPane.YES_OPTION)
+        {
+            dispose();
+            new BattleshipFrame();
+        }
     }
 }
