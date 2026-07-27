@@ -53,7 +53,7 @@ public class BattleshipFrame extends JFrame
 
     public BattleshipFrame()
     {
-        super("Battleship Layout");
+        super("Battleship");
 
         fleet = ShipType.values();
         placementPlayer = 1;
@@ -123,7 +123,7 @@ public class BattleshipFrame extends JFrame
             int choice = JOptionPane.showConfirmDialog
             (
                 this,
-                "This will remove any ships already placed and randomly place all five ships.\n\nContinue?",
+                "This will remove any ships already placed and randomly place all five ships.\nContinue?",
                 "Random Fleet",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
@@ -382,6 +382,7 @@ public class BattleshipFrame extends JFrame
             targetBoard = player2Board;
         }
 
+        // Result of cellstate for outcome
         CellState result = targetBoard.fireAt(row, col);
 
         if(result == null)
@@ -399,12 +400,10 @@ public class BattleshipFrame extends JFrame
         char columnLetter = (char)('A' + col);
         String coordinate = "" + columnLetter + (row + 1);
 
+        // When hit is detected
         if(result == CellState.HIT)
         {
-            addGameMessage(
-                "Player " + currentPlayer +
-                " fired at " + coordinate + ": HIT!"
-            );
+            addGameMessage("Player " + currentPlayer + " fired at " + coordinate + ": HIT!");
 
             playSound("missileHit.wav");
 
@@ -416,14 +415,11 @@ public class BattleshipFrame extends JFrame
         }
         else
         {
-            addGameMessage(
-                "Player " + currentPlayer +
-                " fired at " + coordinate + ": MISS."
-            );
-
+            addGameMessage("Player " + currentPlayer +" fired at " + coordinate + ": MISS.");
             playSound("WaterSplash.wav");
         }
 
+        // When game over
         if(targetBoard.areAllShipsSunk())
         {
             handleGameOver(currentPlayer);
@@ -441,9 +437,7 @@ public class BattleshipFrame extends JFrame
             player1Title.setText("PLAYER 1 TARGET GRID");
             player2Title.setText("PLAYER 2 BOARD");
 
-            statusLabel.setText(
-                "Player 2: Select a square on Player 1's board"
-            );
+            statusLabel.setText("Player 2: Select a square on Player 1's board");
         }
         else
         {
@@ -455,32 +449,28 @@ public class BattleshipFrame extends JFrame
             player1Title.setText("PLAYER 1 BOARD");
             player2Title.setText("PLAYER 2 TARGET GRID");
 
-            statusLabel.setText(
-                "Player 1: Select a square on Player 2's board"
-            );
+            statusLabel.setText("Player 1: Select a square on Player 2's board");
         }
     }
 
-    // Audio Testing
     // Loads and plays one sound file
     private void playSound(String fileName)
     {
         try
         {
-            // Create a File object using the file path
+            // Creating file object from path
             File soundFile = new File(fileName);
 
-            // Open the file as an audio stream
-            AudioInputStream audio =
-                AudioSystem.getAudioInputStream(soundFile);
+            // Open the file as audio stream
+            AudioInputStream audio = AudioSystem.getAudioInputStream(soundFile);
 
-            // Create an object that can play a short sound
+            // Create to get clip
             Clip clip = AudioSystem.getClip();
 
-            // ADDED: Load the sound into the Clip
+            // Load file into clip
             clip.open(audio);
 
-            // Start playing the sound
+            // Playing sound
             clip.start();
         }
         catch(Exception exception)
@@ -498,7 +488,7 @@ public class BattleshipFrame extends JFrame
     // Passing of message for the game relay
     private void addGameMessage(String message)
     {
-        gameRelay.append(message + "\n");
+        gameRelay.append(message + "\n\n");
         gameRelay.setCaretPosition(gameRelay.getDocument().getLength());
     }
 
@@ -516,7 +506,7 @@ public class BattleshipFrame extends JFrame
 
         int choice = JOptionPane.showConfirmDialog(
             this,
-            winMessage + "\n\nWould you like to play again?",
+            winMessage + "\nWould you like to play again?",
             "Game Over",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.INFORMATION_MESSAGE

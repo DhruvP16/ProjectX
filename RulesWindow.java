@@ -25,17 +25,20 @@ public class RulesWindow extends JFrame
         rulesArea.setEditable(false);
         rulesArea.setContentType("text/html");
 
-        // If html file not found
+        // If html file not loading
         try
         {
-            URL rulesPage = RulesWindow.class.getResource("rules.html");
+            URL rulesPage = getClass().getResource("rules.html");
 
-            if (rulesPage == null)
+            if (rulesPage != null)
             {
-                throw new IOException("rules.html was not found");
+                rulesArea.setPage(rulesPage);
             }
-
-            rulesArea.setPage(rulesPage);
+            else
+            {
+                rulesArea.setText("<html><body><h1>Rules File Not Found</h1>" +
+                    "<p>The rules.html file could not be located.</p></body></html>");
+            }
         }
         catch (IOException exception)
         {
@@ -47,10 +50,10 @@ public class RulesWindow extends JFrame
                 "<p>The rules page could not be loaded.</p></body></html>");
         }
 
+        rulesArea.setCaretPosition(0);
         add(new JScrollPane(rulesArea), BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setPreferredSize(new Dimension(620, 520));
-        pack();
+        setMinimumSize(new Dimension(620, 550));
         setLocationRelativeTo(null);
         setVisible(true);
     }

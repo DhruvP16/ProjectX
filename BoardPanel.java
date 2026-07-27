@@ -60,11 +60,13 @@ public class BoardPanel extends JPanel
     // Used for BattleshipFrame that shot was fired 
     private ShotListener shotListener;
 
+    // For Placing ship
     public interface ShipPlacementListener
     {
         void shipPlaced(ShipType ship);
     }
     
+    // For firing
     public interface ShotListener
     {
         void shotSelected(int row, int col);
@@ -97,7 +99,7 @@ public class BoardPanel extends JPanel
         currentShip = null;
         previewRow = -1;
         previewCol = -1;
-        setBackground(new Color(235, 242, 248));
+        setBackground(new Color(235, 240, 250));
 
         // Mouse handling for board
         addMouseListener(new MouseAdapter()
@@ -112,7 +114,8 @@ public class BoardPanel extends JPanel
 
                 int col = cell.x;
                 int row = cell.y;
-            
+        
+                // Place if during placementmode ELSE report firing square
                 if(placementMode && canPlaceShip(row, col))
                 {
                     placeShip(row, col);
@@ -123,6 +126,7 @@ public class BoardPanel extends JPanel
                 }
             }
 
+            // Remove preview when mouse leaves panel
             public void mouseExited(MouseEvent event)
             {
                 previewRow = -1;
@@ -136,6 +140,7 @@ public class BoardPanel extends JPanel
         {
             public void mouseMoved(MouseEvent event)
             {
+                // Board is inactive
                 if(!placementMode && !firingMode)
                 {
                     return;
@@ -149,6 +154,7 @@ public class BoardPanel extends JPanel
                 }
                 else
                 {
+                    // Save square under mouse
                     previewCol = cell.x;
                     previewRow = cell.y;
                 }
@@ -207,6 +213,7 @@ public class BoardPanel extends JPanel
     // Setting selection on or off for firing
     public void setFiringMode(boolean firingMode)
     {
+        // Instance
         this.firingMode = firingMode;
         placementMode = false;
         showShips = false;
@@ -280,9 +287,11 @@ public class BoardPanel extends JPanel
                 }
                 else
                 {
-                    g.setColor(new Color(185,220,240));
+                    // Light blue for water square
+                    g.setColor(new Color(190,220,240));
                 }
 
+                // Boarder around square
                 g.fillRect(x,y,cellSize,cellSize);
                 g.setColor(new Color(25,70,105));
                 g.drawRect(x,y,cellSize,cellSize);
@@ -328,10 +337,13 @@ public class BoardPanel extends JPanel
             return;
         }
 
+        // Check for entire ship can be placed
         boolean valid = canPlaceShip(previewRow, previewCol);
 
+        // Draw one preview square for each ship square (length)
         for(int i = 0; i < currentShip.getLength(); i++)
         {
+            // Starting on the square under mouse and building back
             int row = previewRow;
             int col = previewCol;
 
@@ -352,14 +364,15 @@ public class BoardPanel extends JPanel
 
                 if(valid)
                 {
-                    g.setColor(new Color(80, 200, 100));
+                    g.setColor(Color.GREEN);
                 }
                 else
                 {
-                    g.setColor(new Color(230, 80, 80));
+                    g.setColor(Color.RED);
                 }
 
-                g.fillRect(x + 2, y + 2, cellSize - 3, cellSize - 3);
+                // Bordering around preview
+                g.fillRect(x, y, cellSize, cellSize);
                 g.setColor(new Color(25, 70, 105));
                 g.drawRect(x, y, cellSize, cellSize);
             }
@@ -384,8 +397,8 @@ public class BoardPanel extends JPanel
         int x = startX + previewCol * cellSize;
         int y = startY + previewRow * cellSize;
 
-        g.setColor(new Color(255, 220, 90));
-        g.fillRect(x + 2, y + 2, cellSize - 3, cellSize - 3);
+        g.setColor(Color.YELLOW);
+        g.fillRect(x, y, cellSize, cellSize);
 
         g.setColor(new Color(25, 70, 105));
         g.drawRect(x, y, cellSize, cellSize);
@@ -479,6 +492,7 @@ public class BoardPanel extends JPanel
         previewCol = -1;
         repaint();
 
+        // BattleshipFrame -> ship was placed
         if(shipPlacementListener != null)
         {
             shipPlacementListener.shipPlaced(placedShip);
@@ -604,6 +618,8 @@ public class BoardPanel extends JPanel
 
         return shotCells[row][col];
     }
+
+    // Check every ship square has been hit
     public boolean areAllShipsSunk()
     {
         for(int row = 0; row < BOARD_SIZE; row++)
