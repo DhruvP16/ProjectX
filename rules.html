@@ -1,44 +1,260 @@
 <html>
 <head>
     <style>
-        body {
+        body
+        {
             font-family: Arial, sans-serif;
-            margin: 28px;
-            color: #18364a;
-            background-color: #f4f8fb;
+            background-color: #f2f5f7;
+            color: #222222;
+            margin: 20px;
+            line-height: 1.4;
         }
-        h1, h2 {
-            color: #0d5a88;
+
+        h1
+        {
+            text-align: center;
+            color: #1f4e6b;
+            margin-top: 0;
+            margin-bottom: 6px;
         }
-        .box {
+
+        .intro
+        {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .section
+        {
             background-color: white;
-            border: 1px solid #9ab5c7;
-            padding: 16px;
-            margin-bottom: 16px;
+            border: 1px solid #aab7c0;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .section h2
+        {
+            color: #1f4e6b;
+            margin-top: 0;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #c5cdd2;
+            padding-bottom: 5px;
+        }
+
+        p
+        {
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+
+        ul
+        {
+            margin-top: 6px;
+            margin-bottom: 6px;
+            padding-left: 25px;
+        }
+
+        li
+        {
+            margin-bottom: 5px;
+        }
+
+        .important
+        {
+            background-color: #e8f1f6;
+            border: 1px solid #8ba4b3;
+            padding: 12px;
+            margin-top: 16px;
         }
     </style>
 </head>
+
 <body>
-    <h1>Battleship Rules</h1>
 
-    <div class="box">
-        <h2>Goal</h2>
-        <p>Sink all of your opponent's ships before your opponent sinks yours.</p>
-    </div>
+<h1>Battleship</h1>
 
-    <div class="box">
-        <h2>Setup</h2>
-        <p>Each player places five ships on a 10 by 10 board. Ships may be placed horizontally or vertically and may not overlap.</p>
-    </div>
+<p class="intro">
+    A two-player strategy game where each player tries to destroy
+    the other player's fleet.
+</p>
 
-    <div class="box">
-        <h2>Turns</h2>
-        <p>Players take turns choosing one coordinate on the opponent's board. The shot is reported as a hit or a miss.</p>
-    </div>
+<div class="section">
+    <h2>Goal of the Game</h2>
 
-    <div class="box">
-        <h2>Winning</h2>
-        <p>The first player to sink all five opposing ships wins.</p>
-    </div>
+    <p>
+        Each player secretly places five ships on their own board.
+        Players then take turns firing at squares on the opponent's board.
+    </p>
+
+    <p>
+        The first player to find and destroy all five enemy ships wins the game.
+    </p>
+</div>
+
+<div class="section">
+    <h2>The Fleet</h2>
+
+    <p>Each player has the following ships:</p>
+
+    <ul>
+        <li><b>Carrier:</b> 5 squares</li>
+        <li><b>Battleship:</b> 4 squares</li>
+        <li><b>Cruiser:</b> 3 squares</li>
+        <li><b>Submarine:</b> 3 squares</li>
+        <li><b>Destroyer:</b> 2 squares</li>
+    </ul>
+</div>
+
+<div class="section">
+    <h2>Placing Ships</h2>
+
+    <p>
+        Player 1 places all five ships first. After Player 1 finishes,
+        the computer is passed to Player 2 so they can place their ships.
+    </p>
+
+    <p>
+        Ships may be placed horizontally or vertically. Ships cannot overlap
+        another ship or extend outside the board.
+    </p>
+
+    <p>
+        Move the mouse over the board to preview the current ship.
+        A green preview means the ship can be placed there. A red preview
+        means the placement is not allowed.
+    </p>
+
+    <ul>
+        <li>
+            <b>Rotate Ship:</b> Changes the current ship between horizontal
+            and vertical placement.
+        </li>
+
+        <li>
+            <b>Random Fleet:</b> Clears the current placement and randomly
+            places all five ships.
+        </li>
+    </ul>
+
+    <p>
+        After both players finish placing their ships, the computer is passed
+        back to Player 1 and the firing portion of the game begins.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Taking Turns</h2>
+
+    <p>
+        Player 1 fires first. To fire, select a square on the opponent's board.
+    </p>
+
+    <p>
+        After a valid shot is taken, the turn changes to the other player.
+        A square that has already been selected cannot be fired upon again.
+    </p>
+
+    <p>
+        The game relay displays whether the shot was a hit, a miss,
+        or whether a ship was completely destroyed.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Hits, Misses, and Destroyed Ships</h2>
+
+    <p>
+        A shot is a hit when it lands on a square occupied by an enemy ship.
+        A shot is a miss when it lands on an empty water square.
+    </p>
+
+    <p>
+        A ship is destroyed when every square occupied by that ship has been hit.
+        When this happens, the game relay announces the name of the destroyed ship.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Board Colors</h2>
+
+    <ul>
+        <li>
+            <b>Light blue:</b> An unselected water square.
+        </li>
+
+        <li>
+            <b>White:</b> A shot that missed.
+        </li>
+
+        <li>
+            <b>Red:</b> A ship square that was hit, but the ship has not
+            been completely destroyed.
+        </li>
+
+        <li>
+            <b>Gray:</b> A ship that has been completely destroyed.
+        </li>
+
+        <li>
+            <b>Dark gray during placement:</b> A ship belonging to the
+            player currently placing ships.
+        </li>
+    </ul>
+
+    <p>
+        Ships remain hidden during the firing portion of the game so the opponent
+        cannot see their locations.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Winning the Game</h2>
+
+    <p>
+        The game ends when one player destroys all five of the opponent's ships.
+    </p>
+
+    <p>
+        After the game ends, a message displays the winner and asks whether
+        the players would like to play again.
+    </p>
+
+    <p>
+        Selecting <b>Yes</b> begins a new game. Selecting <b>No</b> keeps
+        the completed game visible.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Game Buttons</h2>
+
+    <ul>
+        <li>
+            <b>Rotate Ship:</b> Changes the direction of the current ship.
+        </li>
+
+        <li>
+            <b>Random Fleet:</b> Clears the current placement and randomly
+            places all five ships.
+        </li>
+
+        <li>
+            <b>New Game:</b> Erases the current game and begins a new one.
+            A confirmation message appears before the game is erased.
+        </li>
+
+        <li>
+            <b>Rules:</b> Opens this rules window.
+        </li>
+    </ul>
+</div>
+
+<div class="important">
+    <b>Important:</b>
+    Do not look at the other player's ship placement. Pass the computer
+    whenever the game instructs you to do so.
+</div>
+
 </body>
 </html>
