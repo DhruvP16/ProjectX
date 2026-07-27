@@ -96,6 +96,7 @@ public class BattleshipFrame extends JFrame
         rotateShipButton = new JButton("Rotate Ship");
         JButton rulesButton = new JButton("Rules");
         randomFleetButton = new JButton("Random Fleet");
+        JButton newGameButton = new JButton("New Game");
 
         // Events
         rotateShipButton.addActionListener(event -> 
@@ -142,6 +143,22 @@ public class BattleshipFrame extends JFrame
             finishPlayerPlacement();
         });
 
+        // New Game
+        newGameButton.addActionListener(event ->
+        {
+            int choice = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to begin a new game?\n" +
+                    "All ships, shots, and current progress will be lost.",
+                    "New Game",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if(choice == JOptionPane.YES_OPTION)
+            {
+                newGame();
+            }
+        });
+
         // Placing two boards next to each other
         JPanel boardsPanel = new JPanel(new GridLayout(1, 2, 14, 0));
         boardsPanel.setBorder(BorderFactory.createEmptyBorder(10, 14, 10, 14));
@@ -172,6 +189,7 @@ public class BattleshipFrame extends JFrame
 
         buttonPanel.add(rotateShipButton);
         buttonPanel.add(randomFleetButton);
+        buttonPanel.add(newGameButton);
         buttonPanel.add(rulesButton);
 
         // Adding relay and buttons to right side
@@ -506,8 +524,14 @@ public class BattleshipFrame extends JFrame
 
         if(choice == JOptionPane.YES_OPTION)
         {
-            dispose();
-            new BattleshipFrame();
+            newGame();
         }
+    }
+
+    // Close current game and start new game
+    private void newGame()
+    {
+        dispose();
+        new BattleshipFrame();
     }
 }
